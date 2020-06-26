@@ -30,10 +30,11 @@ export default function App() {
     const result = await api.post(`repositories/${id}/like`);
 
     const newList = repositories.map((repo) => {
-      if (repo.id === id) {
-        return result.data;
-      } else {
+      if (repo.id !== id) {
         return repo;
+      } else {
+        repo.like = result.data.like;
+        return result.data;
       }
     });
 
@@ -60,15 +61,18 @@ export default function App() {
               </View>
 
               <View style={styles.likesContainer}>
-                <Text style={styles.likeText} testID={item.id}>
-                  {item.likes} {item.likes === 1 ? "curtida" : "curtidas"}
+                <Text
+                  style={styles.likeText}
+                  testID={`repository-likes-${item.id}`}
+                >
+                  {item.likes} curtidas
                 </Text>
               </View>
 
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => handleLikeRepository(item.id)}
-                testID={item.id}
+                testID={`like-button-${item.id}`}
               >
                 <Text style={styles.buttonText}>Curtir</Text>
               </TouchableOpacity>
